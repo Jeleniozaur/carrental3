@@ -30,4 +30,9 @@ public class Car {
 
     @Column(name = "rented_to_user_id")
     private Long rentedToUserId;
+
+    public Car(String brand, String model) {
+        this.brand = brand;
+        this.model = model;
+    }
 }

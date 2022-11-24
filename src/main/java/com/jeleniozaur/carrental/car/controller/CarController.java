@@ -2,72 +2,76 @@ package com.jeleniozaur.carrental.car.controller;
 
 import com.jeleniozaur.carrental.car.model.Car;
 import com.jeleniozaur.carrental.car.repository.CarRepository;
+import com.jeleniozaur.carrental.car.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("/api/car")
+@RequestMapping("/api/car/")
 public class CarController {
+
     @Autowired
-    CarRepository carRepository;
+    CarService carService;
 
-    //get all cars or by rented or by userId
-    @GetMapping("cars")
-    public ResponseEntity<List<Car>> getAllCars(@RequestParam(required = false) Long userId,
-                                                @RequestParam(required = false) boolean rented) {
+    @GetMapping("all")
+    public ResponseEntity<List<Car>> getAllCars() {
         try {
-            List<Car> cars = new ArrayList<Car>();
-            if (rented) {
-                if (userId != null) {
-                    //rented for user
-                    carRepository.findByRentedToUserId(userId).forEach(cars::add);
-                } else {
-                    //return all rented cars
-                    carRepository.findByRented(true).forEach(cars::add);
-                }
-            } else {
-                if (userId == null) {
-                    //return all not rented cars
-                    carRepository.findByRented(false).forEach(cars::add);
-                }
-                //if both rented and carId are provided, the list will always be empty
-                //this is due to a decision that while the car.rented is false the car.tented_to_user_id must be null
-            }
-
-            if (cars.isEmpty()) {
-                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(cars, HttpStatus.OK);
+            List<Car> cars = carService.getAllCars();
+            if(!cars.isEmpty())
+                return new ResponseEntity<>(cars, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("available")
+    public ResponseEntity<List<Car>> getAvailableCars() {
+        try {
+            List<Car> cars = carService.getAvailableCars();
+            if(!cars.isEmpty())
+                return new ResponseEntity<>(cars, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    //public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
+    @GetMapping("{id}")
+    public ResponseEntity<Car> getCar(@PathVariable("id") Long id) {
+        Car car = carService.getCar(id);
+        if(car != null)
+            return new ResponseEntity<>(car,HttpStatus.OK);
+        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    }
 
-    //get car by id
+    @PostMapping("add")
+    public ResponseEntity<String> addCar(@RequestBody() Car car) {
+        try {
+            Car newCar = carService.createCar(car);
+            if(newCar != null)
+                return new ResponseEntity<>("Success",HttpStatus.OK);
+            return new ResponseEntity<>("Failed",HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    //get not rented cars
-
-    //get cars rented by user
-
-    /*update car
-    allow:
-        -model
-        -brand
-     */
-
-    //update rented
-
-    //delete car
+    @PatchMapping("update/{id}")
+    public ResponseEntity<Car> updateCar(@PathVariable("id") Long id, @RequestBody Car car) {
+        Car updatedCar = carService.updateCar(id,car);
+        if(updatedCar==null)
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(updatedCar,HttpStatus.OK);
+    }
 }
