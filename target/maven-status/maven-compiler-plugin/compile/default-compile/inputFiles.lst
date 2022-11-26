@@ -1,4 +1,10 @@
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/user/service/UserService.java
 /home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/car/repository/CarRepository.java
 /home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/car/controller/CarController.java
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/car/service/CarService.java
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/user/repository/UserRepository.java
 /home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/car/model/Car.java
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/car/service/CarServiceImpl.java
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/user/model/User.java
+/home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/user/service/UserServiceImpl.java
 /home/adj/Desktop/Projects/carrental3/src/main/java/com/jeleniozaur/carrental/CarrentalApplication.java

@@ -1,18 +1,13 @@
 package com.jeleniozaur.carrental.car.controller;
 
 import com.jeleniozaur.carrental.car.model.Car;
-import com.jeleniozaur.carrental.car.repository.CarRepository;
 import com.jeleniozaur.carrental.car.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/car/")
@@ -23,28 +18,20 @@ public class CarController {
 
     @GetMapping("all")
     public ResponseEntity<List<Car>> getAllCars() {
-        try {
-            List<Car> cars = carService.getAllCars();
-            if(!cars.isEmpty())
-                return new ResponseEntity<>(cars, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Car> cars = carService.getAllCars();
+        if(!cars.isEmpty())
+            return new ResponseEntity<>(cars, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("available")
     public ResponseEntity<List<Car>> getAvailableCars() {
-        try {
-            List<Car> cars = carService.getAvailableCars();
-            if(!cars.isEmpty())
-                return new ResponseEntity<>(cars, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Car> cars = carService.getAvailableCars();
+        if(!cars.isEmpty())
+            return new ResponseEntity<>(cars, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("{id}")
@@ -52,26 +39,54 @@ public class CarController {
         Car car = carService.getCar(id);
         if(car != null)
             return new ResponseEntity<>(car,HttpStatus.OK);
-        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity("Car not found",null,HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("add")
     public ResponseEntity<String> addCar(@RequestBody() Car car) {
         try {
-            Car newCar = carService.createCar(car);
-            if(newCar != null)
-                return new ResponseEntity<>("Success",HttpStatus.OK);
-            return new ResponseEntity<>("Failed",HttpStatus.BAD_REQUEST);
+            carService.createCar(car);
+            return new ResponseEntity<>("Success",HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
     @PatchMapping("update/{id}")
     public ResponseEntity<Car> updateCar(@PathVariable("id") Long id, @RequestBody Car car) {
         Car updatedCar = carService.updateCar(id,car);
-        if(updatedCar==null)
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(updatedCar,HttpStatus.OK);
+        if(updatedCar!=null)
+            return new ResponseEntity<>(updatedCar,HttpStatus.OK);
+        return new ResponseEntity("Invalid car id",null,HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity deleteCar(@PathVariable("id") Long id) {
+        try {
+            carService.deleteCar(id);
+            return new ResponseEntity("Success",HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("rent/{carId}")
+    public ResponseEntity rentCar(@PathVariable("carId") Long carId, @RequestHeader("userId") Long userId) {
+        try {
+            carService.rentCar(carId,userId);
+            return new ResponseEntity("Success",HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("return/{id}")
+    public ResponseEntity returnCar(@PathVariable("id") Long id) {
+        try {
+            carService.returnCar(id);
+            return new ResponseEntity("Success",HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -1,6 +1,10 @@
+com/jeleniozaur/carrental/user/service/UserServiceImpl.class
 com/jeleniozaur/carrental/car/controller/CarController.class
 com/jeleniozaur/carrental/car/service/CarService.class
 com/jeleniozaur/carrental/car/service/CarServiceImpl.class
 com/jeleniozaur/carrental/car/repository/CarRepository.class
 com/jeleniozaur/carrental/CarrentalApplication.class
+com/jeleniozaur/carrental/user/service/UserService.class
 com/jeleniozaur/carrental/car/model/Car.class
+com/jeleniozaur/carrental/user/repository/UserRepository.class
+com/jeleniozaur/carrental/user/model/User.class
