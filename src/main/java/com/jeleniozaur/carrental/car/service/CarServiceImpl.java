@@ -4,6 +4,7 @@ import com.jeleniozaur.carrental.car.model.Car;
 import com.jeleniozaur.carrental.car.repository.CarRepository;
 import com.jeleniozaur.carrental.user.model.User;
 import com.jeleniozaur.carrental.user.service.UserService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ public class CarServiceImpl implements CarService {
             throw new Exception("Car not found");
     }
 
+    @SneakyThrows
     @Override
     public Car updateCar(Long id, Car car) {
         if(carExists(id)) {
@@ -64,7 +66,7 @@ public class CarServiceImpl implements CarService {
             carRepository.save(updatedCar);
             return updatedCar;
         }
-        return null;
+        throw new Exception("123");
     }
 
     @Override

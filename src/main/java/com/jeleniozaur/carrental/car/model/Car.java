@@ -31,8 +31,16 @@ public class Car {
     @Column(name = "rented_to_user_id")
     private Long rentedToUserId;
 
+    //constructor for car update
     public Car(String brand, String model) {
         this.brand = brand;
         this.model = model;
+    }
+
+    //this constructor is used only for testing
+    public Car(String brand, String model, boolean rented) {
+        this.brand = brand;
+        this.model = model;
+        this.rented = rented;
     }
 }
